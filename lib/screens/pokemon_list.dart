@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pokedex_app/models/pokemon.dart';
 import 'package:pokedex_app/repositories/pokemon_repository.dart';
 import 'package:pokedex_app/screens/pokemon_detail.dart';
@@ -13,29 +14,57 @@ class PokemonList extends StatefulWidget {
 }
 
 class _PokemonListState extends State<PokemonList> {
-  List<Pokemon>? _pokemons;
   PokemonService? _pokemonService;
+  static const _pageSize = 20;
+
+  final PagingController<int, Pokemon> _pagingController =
+      PagingController(firstPageKey: 0);
 
   @override
   void initState() {
     _pokemonService = PokemonService();
-    initialize();
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
     super.initState();
   }
 
-  Future initialize() async {
-    _pokemons = await _pokemonService?.getAll();
-    setState(() {
-      _pokemons = _pokemons;
-    });
+  Future _fetchPage(int pageKey) async {
+    try {
+      final newPokemons = await _pokemonService?.getAll(0, _pageSize);
+      final isLastPage = (newPokemons?.length ?? 0) < _pageSize;
+      if (isLastPage) {
+        _pagingController.appendLastPage(newPokemons ?? []);
+      } else {
+        final nextPageKey = pageKey + (newPokemons?.length ?? 0);
+        _pagingController.appendPage(newPokemons ?? [], nextPageKey);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return PagedListView<int, Pokemon>(
+      pagingController: _pagingController,
+      builderDelegate: PagedChildBuilderDelegate<Pokemon>(
+        itemBuilder: (context, item, index) => PokemonItem(
+          pokemon: item,
+        ),
+      ),
+    );
+
+    /*ListView.builder(
       itemCount: _pokemons?.length ?? 0,
       itemBuilder: (context, index) => PokemonItem(pokemon: _pokemons?[index]),
-    );
+    );*/
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 }
 
