@@ -9,6 +9,12 @@ class Pokemon {
   Pokemon.fromJson(Map<String, dynamic> json)
       : name = json["name"],
         id = getId(json["url"]);
+
+  Map<String, dynamic> toMap(){
+    return {
+      'id': id,
+    };
+  }
 }
 
 class PokemonInfo {

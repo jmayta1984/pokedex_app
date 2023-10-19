@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_app/models/pokemon.dart';
+import 'package:pokedex_app/repositories/pokemon_repository.dart';
 import 'package:pokedex_app/screens/pokemon_detail.dart';
 import 'package:pokedex_app/services/pokemon_service.dart';
 import 'package:pokedex_app/utils/functions.dart';
@@ -50,6 +51,19 @@ class _PokemonItemState extends State<PokemonItem> {
   bool isFavorite = false;
 
   @override
+  void initState() {
+    initialize();
+    super.initState();
+  }
+
+  initialize() async {
+    isFavorite = await PokemonRepository().isFavorite(widget.pokemon!);
+    setState(() {
+      isFavorite = isFavorite;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final image = getImage(widget.pokemon?.id ?? "");
     final icon =
@@ -70,6 +84,9 @@ class _PokemonItemState extends State<PokemonItem> {
               setState(() {
                 isFavorite = !isFavorite;
               });
+              isFavorite
+                  ? PokemonRepository().insert(pokemon!)
+                  : PokemonRepository().delete(pokemon!);
             },
             icon: icon,
           ),
