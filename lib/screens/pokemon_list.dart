@@ -15,7 +15,7 @@ class PokemonList extends StatefulWidget {
 
 class _PokemonListState extends State<PokemonList> {
   PokemonService? _pokemonService;
-  static const _pageSize = 20;
+  final _pageSize = 20;
 
   final PagingController<int, Pokemon> _pagingController =
       PagingController(firstPageKey: 0);
@@ -31,13 +31,13 @@ class _PokemonListState extends State<PokemonList> {
 
   Future _fetchPage(int pageKey) async {
     try {
-      final newPokemons = await _pokemonService?.getAll(0, _pageSize);
-      final isLastPage = (newPokemons?.length ?? 0) < _pageSize;
+      final pokemons = await _pokemonService?.getAll(pageKey, _pageSize)??[];
+      final isLastPage = pokemons.length  < _pageSize;
       if (isLastPage) {
-        _pagingController.appendLastPage(newPokemons ?? []);
+        _pagingController.appendLastPage(pokemons);
       } else {
-        final nextPageKey = pageKey + (newPokemons?.length ?? 0);
-        _pagingController.appendPage(newPokemons ?? [], nextPageKey);
+        final nextPageKey = pageKey + 1 ;
+        _pagingController.appendPage(pokemons, nextPageKey);
       }
     } catch (error) {
       _pagingController.error = error;
