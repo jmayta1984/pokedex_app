@@ -31,12 +31,12 @@ class _PokemonListState extends State<PokemonList> {
 
   Future _fetchPage(int pageKey) async {
     try {
-      final pokemons = await _pokemonService?.getAll(pageKey, _pageSize)??[];
-      final isLastPage = pokemons.length  < _pageSize;
+      final pokemons = await _pokemonService?.getAll(pageKey, _pageSize) ?? [];
+      final isLastPage = pokemons.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(pokemons);
       } else {
-        final nextPageKey = pageKey + 1 ;
+        final nextPageKey = pageKey + 1;
         _pagingController.appendPage(pokemons, nextPageKey);
       }
     } catch (error) {
@@ -54,11 +54,6 @@ class _PokemonListState extends State<PokemonList> {
         ),
       ),
     );
-
-    /*ListView.builder(
-      itemCount: _pokemons?.length ?? 0,
-      itemBuilder: (context, index) => PokemonItem(pokemon: _pokemons?[index]),
-    );*/
   }
 
   @override
@@ -87,9 +82,11 @@ class _PokemonItemState extends State<PokemonItem> {
 
   initialize() async {
     isFavorite = await PokemonRepository().isFavorite(widget.pokemon!);
-    setState(() {
-      isFavorite = isFavorite;
-    });
+    if (mounted) {
+      setState(() {
+        isFavorite = isFavorite;
+      });
+    }
   }
 
   @override
