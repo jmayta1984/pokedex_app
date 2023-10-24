@@ -10,11 +10,13 @@ class Pokemon {
       : name = json["name"],
         id = getId(json["url"]);
 
-  Map<String, dynamic> toMap(){
-    return {
-      'id': id,
-    };
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'name': name};
   }
+
+  Pokemon.fromMap(Map<String, dynamic> map)
+      : name = map['name'],
+        id = map['id'];
 }
 
 class PokemonInfo {

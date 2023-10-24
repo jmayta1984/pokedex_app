@@ -21,5 +21,9 @@ class PokemonRepository {
     return maps.isNotEmpty;
   }
 
-  
+  Future<List<Pokemon>> getAll() async {
+    Database db = await PokemonDatabase().openDb();
+    final maps = await db.query(PokemonDatabase().tableName);
+    return maps.map((map) => Pokemon.fromMap(map)).toList();
+  }
 }

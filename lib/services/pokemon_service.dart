@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -12,6 +13,7 @@ class PokemonService {
 
     if (response.statusCode == HttpStatus.ok) {
       final jsonResponse = json.decode(response.body);
+      log(response.body);
       final List maps = jsonResponse["results"];
       final pokemons = maps.map((e) => Pokemon.fromJson(e)).toList();
       return pokemons;

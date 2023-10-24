@@ -34,84 +34,48 @@ class _PokemonDetailState extends State<PokemonDetail> {
     final image = getImage(widget.id);
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius:
-                          BorderRadius.vertical(bottom: Radius.circular(30))),
-                  width: width,
-                  height: width * 0.7,
-                  child: Image(image: image)),
+        body: SingleChildScrollView(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Container(
+                decoration: const BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius:
+                        BorderRadius.vertical(bottom: Radius.circular(30))),
+                width: width,
+                height: width * 0.7,
+                child: Hero(tag: widget.id, child: Image(image: image))),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Text(
+              _pokemonInfo?.name ?? "",
+              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Text(
-                _pokemonInfo?.name ?? "",
-                style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: _pokemonInfo?.types
-                          .map((e) => Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.green[200],
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(e),
-                                ),
-                              ))
-                          .toList() ??
-                      []),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        _pokemonInfo?.weight.toString() ?? "",
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      const Text(
-                        "Weight",
-                        style: TextStyle(fontWeight: FontWeight.w200),
-                      ),
-                    ],
-                  ),
-                  Column(children: [
-                    Text(
-                      _pokemonInfo?.height.toString() ?? "",
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    const Text(
-                      "Height",
-                      style: TextStyle(fontWeight: FontWeight.w200),
-                    ),
-                  ]),
-                ],
-              ),
-            ),
-            Column(
-              children:
-                  _pokemonInfo?.stats.map((e) => Text(e.name)).toList() ?? [],
-            )
-          ],
-        ),
+          ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: _pokemonInfo?.types
+                      .map((e) => Container(
+                            decoration: BoxDecoration(
+                              color: Colors.green[200],
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(e),
+                            ),
+                          ))
+                      .toList() ??
+                  []),
+          Column(
+            children:
+                _pokemonInfo?.stats.map((e) => Text(e.name)).toList() ?? [],
+          )
+        ],
       ),
-    );
+    ));
   }
 }

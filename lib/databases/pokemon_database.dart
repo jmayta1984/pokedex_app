@@ -11,7 +11,7 @@ class PokemonDatabase {
   Future<Database> openDb() async {
     db ??= await openDatabase(join(await getDatabasesPath(), databaseName),
         onCreate: (database, version) {
-      database.execute("create table $tableName (id integer primary key)");
+      database.execute("create table $tableName (id text primary key, name text)");
     }, version: version);
     return db as Database;
   }

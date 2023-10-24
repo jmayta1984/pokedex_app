@@ -82,6 +82,7 @@ class _PokemonItemState extends State<PokemonItem> {
 
   initialize() async {
     isFavorite = await PokemonRepository().isFavorite(widget.pokemon!);
+
     if (mounted) {
       setState(() {
         isFavorite = isFavorite;
@@ -103,7 +104,9 @@ class _PokemonItemState extends State<PokemonItem> {
       child: Card(
         elevation: 2,
         child: ListTile(
-          leading: Image(image: image),
+          leading: Hero(
+            tag: widget.pokemon?.id??'',
+            child: Image(image: image)),
           title: Text(pokemon?.name ?? ""),
           trailing: IconButton(
             onPressed: () {
